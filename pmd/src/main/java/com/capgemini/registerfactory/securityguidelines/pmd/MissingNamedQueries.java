@@ -17,16 +17,14 @@ import net.sourceforge.pmd.lang.xml.rule.XmlRuleViolationFactory;
 public class MissingNamedQueries extends AbstractDomXmlRule {
 	@Override
 	public void start(RuleContext ctx) {
-		// TODO Auto-generated method stub
 		ctx.setAttribute("hasNamedQuery", false);
 		super.start(ctx);
 	}
+	
 	@Override
 	public void end(RuleContext ctx) {
-		// TODO Auto-generated method stub
-		
 		if  (!((Boolean)ctx.getAttribute("hasNamedQuery")).booleanValue()) {
-			 System.out.println(ctx.getSourceCodeFilename() +  "Kein Named Query");
+			// System.out.println(ctx.getSourceCodeFilename() +  "Kein Named Query");
 			 
 			 //addViolation doesn't work without refering to an explicit source file
 			 XmlRuleViolationFactory.INSTANCE.addViolation(ctx, this, null, this.getMessage(), null);
@@ -41,9 +39,6 @@ public class MissingNamedQueries extends AbstractDomXmlRule {
 			ctx.removeAttribute("hasNamedQuery"); // bestehende Werte können nicht überschrieben werden
 			ctx.setAttribute("hasNamedQuery", true);
 		}
-		
-		
-		//System.out.println(ctx.getSourceCodeFile().getName());
 		super.visit(node, document, ctx);
 	}
 }

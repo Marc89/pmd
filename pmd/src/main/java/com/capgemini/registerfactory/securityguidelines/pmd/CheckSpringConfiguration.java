@@ -41,11 +41,8 @@ public class CheckSpringConfiguration extends AbstractDomXmlRule {
 	final String LDAP_TEMPLATE_PATTERN = "/x:beans/x:bean[@id=\"ldapTemplate\" and @class=\"org.springframework.ldap.core.LdapTemplate\" and x:constructor-arg[@ref=\"contextSource\"]]";
 	final String LDAP_TEMPLATE_HOLDER_PATTERN = "/x:beans/x:bean[@id=\"ldapTemplateHolder\" and x:property[@name=\"ldapTemplate\" and @ref=\"ldapTemplate\"]]";
 	
-	//final String sicherheitXmlPattern = "<beans xmlns=\"http://www.springframework.org/schema/beans\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:aop=\"http://www.springframework.org/schema/aop\" xmlns:sec=\"http://www.springframework.org/schema/security\" xsi:schemaLocation=\"http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-2.5.xsd  http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.4.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd\"><bean id=\"aufrufKontextInterceptor\" class=\"de.bund.bva.pliscommon.aufrufkontext.service.StelltAufrufKontextBereitIn terceptor\"><property name=\"aufrufKontextVerwalter\" ref=\"aufrufKontextVerwalter\" /><property name=\"aufrufKontextFactory\" ref=\"aufrufKontextFactory\" /></bean><bean id=\"gesichertInterceptor\" class=\"de.bund.bva.pliscommon.sicherheit.annotation.GesichertInterceptor\"><property name=\"sicherheit\" ref=\"sicherheit\" /><property name=\"sicherheitAttributeSource\"><bean class=\"de.bund.bva.pliscommon.sicherheit.annotation. AnnotationSicherheitAttributeSource\" /></property></bean><bean id=\"loggingKontextIntercepter\" class=\"de.bund.bva.pliscommon. aufrufkontext.service.StelltLoggingKontextBereitInterceptor\" /><aop:config><aop:pointcut id=\"loggingKontextPointcut\" expression=\"@annotation(de.bund.bva.pliscommon.aufrufkontext.service.StelltLogg ingKontextBereit) || @within(de.bund.bva.pliscommon.aufrufkontext.  service.StelltLoggingKontextBereit)\" /><aop:pointcut id=\"aufrufKontextPointcut\" expression=\"@annotation(de.bund.bva.pliscommon.aufrufkontext.service.StelltAufr ufKontextBereit) ||  @within(de.bund.bva.pliscommon.aufrufkontext.service.StelltAufrufKontextBereit) \" /><aop:pointcut id=\"gesichertPointcut\" expression=\"@annotation(de.bund.bva.pliscommon.sicherheit.annotation.Gesichert)  || @within(de.bund.bva.pliscommon.sicherheit.annotation.Gesichert)\" /><aop:advisor pointcut-ref=\"loggingKontextPointcut\" advice-ref=\"loggingKontextIntercepter\" order=\"50\" /><aop:advisor pointcut-ref=\"aufrufKontextPointcut\" advice-ref=\"aufrufKontextInterceptor\" order=\"50\" /><aop:advisor pointcut-ref=\"gesichertPointcut\" advice-ref=\"gesichertInterceptor\" order=\"100\" /></aop:config><!-- Factory zum Erzeugen neuer Aufruf-Kontexte --><bean id=\"aufrufKontextFactory\" class=\"de.bund.bva.pliscommon.aufrufkontext.impl.AufrufKontextFactoryImpl\"><property name=\"aufrufKontextKlasse\" value=\"de.bund.bva.pliscommon.kontext.BehoerdenverzeichnisAufrufKontext\" /></bean><!-- AufrufKontextVerwalter definieren (jeder Request hat einen eigenen --><bean id=\"aufrufKontextVerwalter\" scope=\"request\" class=\"de.bund.bva.pliscommon.aufrufkontext.impl.AufrufKontextVerwalterImpl\"><aop:scoped-proxy /></bean><!-- Zur \u00DCberwachung der Verf\u00FCgbarkeit des Cams --><bean id=\"sicherheitAdmin\" class=\"de.bund.bva.pliscommon.sicherheit.impl.SicherheitAdminImpl\"><property name=\"accessManager\" ref=\"camsAccessManager\" /></bean><!-- \u00DCber diese Bean wird die Komponente Sicherheit Einsatzbereit gemacht --><bean id=\"sicherheit\" class=\"de.bund.bva.pliscommon.sicherheit.impl.SicherheitImpl\"><property name=\"rollenRechteDateiPfad\" value=\"/resources/sicherheit/rollenrechte.xml\" /><property name=\"aufrufKontextVerwalter\" ref=\"aufrufKontextVerwalter\" /><property name=\"accessManager\" ref=\"camsAccessManager\" /><property name=\"konfiguration\" ref=\"konfiguration\" /><property name=\"aufrufKontextFactory\" ref=\"aufrufKontextFactory\" /></bean><!-- ====================================================================== Definition der Komponente 'AccessManager'  ======================================================================  --><bean id=\"camsAccessManager\" class=\"de.bund.bva.pliscommon.sicherheit.impl.CamsAccessManagerImpl\" depends-on=\"konfiguration\"><constructor-arg index=\"0\"><ref bean=\"camsConfiguration\" /></constructor-arg><constructor-arg index=\"1\"><ref bean=\"konfiguration\" /></constructor-arg></bean><bean id=\"camsConfiguration\" class=\"org.springframework.core.io.ClassPathResource\"><constructor-arg value=\"/config/cams-webagent.conf\" /></bean></beans>";
 	@Override
 	public void start(RuleContext ctx) {
-		//System.out.println("StartCheckSpring");
-		
 		super.start(ctx);
 	}
 	@Override
@@ -62,19 +59,6 @@ public class CheckSpringConfiguration extends AbstractDomXmlRule {
 		}
 		super.end(ctx);
 	}
-	private String documentToString(Document document) {
-		try {
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer transformer = tf.newTransformer();
-		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-		StringWriter writer = new StringWriter();
-		transformer.transform(new DOMSource(document), new StreamResult(writer));
-		return writer.getBuffer().toString();
-		} catch(TransformerException te) {
-			return "";
-		}
-	}
-	
 	static class SpringNamespaceContext implements NamespaceContext {
 		@Override
 		 public String getNamespaceURI(String prefix) {
@@ -161,33 +145,10 @@ public class CheckSpringConfiguration extends AbstractDomXmlRule {
 				}
 				}
 			} catch (XPathExpressionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
 		super.visit(node, document, ctx);
 	}
-//	@Override
-//	protected void visit(XmlNode node, Element element, RuleContext ctx) {
-//		if(isSicherheitXml) {
-//			if(element.getNodeName().equals("bean")) {
-//				String beanId = element.getAttribute("id");
-//				if(beanId.equals("aufrufKontextInterceptor")) {
-//					if(!element.getAttribute("class").
-//							equals("de.bund.bva.pliscommon.aufrufkontext.service.StelltAufrufKontextBereitInterceptor")) {
-//						addViolation(ctx, node);
-//					}
-//					
-//				}
-//				
-//				
-//			}
-//			
-//			
-//		}
-//		super.visit(node, element, ctx);
-//	}
-	
-
 }
 

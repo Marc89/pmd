@@ -4,7 +4,7 @@
     <groupId>net.sourceforge.pmd</groupId>
     <artifactId>pmd</artifactId>
     <name>PMD</name>
-    <version>5.0.5</version>
+    <version>5.0.5.1</version>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -533,6 +533,13 @@
         </pluginManagement>
     </build>
     <dependencies>
+		<dependency>
+		<groupId>xmlunit</groupId>
+  <artifactId>xmlunit</artifactId>
+  <version>1.4</version>
+		</dependency>
+	
+	
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>

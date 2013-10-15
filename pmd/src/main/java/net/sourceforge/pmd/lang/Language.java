@@ -46,7 +46,7 @@ public enum Language {
     PHP("PHP: Hypertext Preprocessor", "PHP", "php", null, "php", "class"),
     RUBY("Ruby", null, "ruby", null, "rb", "cgi", "class"),
     XSL("XSL", null, "xsl", XmlRuleChainVisitor.class, "xsl", "xslt"),
-    XML("XML", null, "xml", XmlRuleChainVisitor.class, "xml");
+    XML("XML", null, "xml", XmlRuleChainVisitor.class, "xml", "xhtml");
 
     private final String name;
     private final String shortName;
